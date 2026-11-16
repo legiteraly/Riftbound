@@ -2,7 +2,7 @@
 (function () {
   const E = window.RiftEV;
   const $app = document.getElementById('app');
-  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, sort: 'ev' } };
+  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, sort: 'ev', col: 'rank', dir: 1 } };
 
   // ---------- helpers ----------
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -48,14 +48,13 @@
   function assumptionsHTML() {
     const o = S.opts;
     const custom = o.sellMode === 'custom';
-    return `<div class="panel"><h2>Your costs &amp; assumptions</h2>
+    return `<div class="panel"><div class="panel-head"><h2>Your costs &amp; assumptions</h2><button class="reset" id="o-reset" type="button">Reset to defaults</button></div>
     <div class="assume">
       <div><label for="o-fee">PSA grading fee / card</label><input id="o-fee" type="number" min="0" step="1" value="${o.gradingFee}"><div class="hint">Your PSA service level</div></div>
-      <div><label for="o-ship">Shipping to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split across the submission</div></div>
-      <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select></div>
+      <div><label for="o-ship">Shipping to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split per card</div></div>
+      <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select><div class="hint">Pick custom to set your own fee</div></div>
       <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" value="${o.sellFee}" ${custom ? '' : 'disabled title="Choose In person / custom to edit"'}><div class="hint">${custom ? 'In person is usually 10–20%' : 'Set by eBay; choose custom to edit'}</div></div>
       <div><label for="o-drop">Value drop during grading %</label><input id="o-drop" type="number" min="0" max="90" step="1" value="${o.valueDrop}"><div class="hint">PSA bulk takes ~80–90 days</div></div>
-      <div><button class="reset" id="o-reset" type="button">Reset to defaults</button></div>
     </div></div>`;
   }
   function bindAssumptions(rerender) {
@@ -82,7 +81,7 @@
         <div class="controls">
           <select id="f-set" aria-label="Set"><option value="">All sets</option>${sets.map((s) => `<option ${f.set === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
           <select id="f-var" aria-label="Variant"><option value="">All variants</option>${variants.map((s) => `<option ${f.variant === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
-          <select id="f-sort" aria-label="Sort"><option value="ev" ${f.sort === 'ev' ? 'selected' : ''}>Sort: EV ($)</option><option value="roi" ${f.sort === 'roi' ? 'selected' : ''}>Sort: ROI (%)</option></select>
+          <select id="f-sort" aria-label="Pick the top 50 by"><option value="ev" ${f.sort === 'ev' ? 'selected' : ''}>Top 50 by EV ($)</option><option value="roi" ${f.sort === 'roi' ? 'selected' : ''}>Top 50 by ROI (%)</option></select>
           <label class="chk"><input type="checkbox" id="f-thin" ${f.hideThin ? 'checked' : ''}> Hide “Evidence: Thin”</label>
         </div>
         <div class="tbl-wrap" id="top"></div>
@@ -93,7 +92,7 @@
     const upd = (k) => (e) => { S.filt[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value; renderTop(); };
     document.getElementById('f-set').addEventListener('change', upd('set'));
     document.getElementById('f-var').addEventListener('change', upd('variant'));
-    document.getElementById('f-sort').addEventListener('change', upd('sort'));
+    document.getElementById('f-sort').addEventListener('change', (e) => { S.filt.sort = e.target.value; S.filt.col = 'rank'; S.filt.dir = 1; renderTop(); });
     document.getElementById('f-thin').addEventListener('change', upd('hideThin'));
     bindSearch();
   }
@@ -104,17 +103,36 @@
     const noData = rows.filter((x) => x.r.ev == null).length;
     rows = rows.filter((x) => x.r.ev != null && !(f.hideThin && x.r.thin));
     rows.sort((a, b) => f.sort === 'roi' ? b.r.roi - a.r.roi : b.r.ev - a.r.ev);
-    const top = rows.slice(0, 50);
+    const top = rows.slice(0, 50).map((x, i) => Object.assign(x, { rank: i + 1 }));
     const pos = rows.filter((x) => x.r.ev > 0).length;
+    const COLS = [
+      ['rank', '#', 'num', (x) => x.rank],
+      ['name', 'Card', '', (x) => x.c.name.toLowerCase()],
+      ['raw', 'Raw (TCGplayer)', 'num', (x) => x.r.raw],
+      ['v10', 'PSA 10 value', 'num', (x) => x.r.v10.value],
+      ['p10', 'Chance of 10', 'num', (x) => x.r.p10],
+      ['ev', 'EV / card', 'num', (x) => x.r.ev],
+      ['roi', 'ROI', 'num', (x) => x.r.roi],
+      ['evid', 'Evidence', '', (x) => x.r.v10.n90],
+    ];
+    const col = COLS.find((c) => c[0] === f.col) || COLS[0];
+    top.sort((a, b) => { const va = col[3](a), vb = col[3](b); return (va < vb ? -1 : va > vb ? 1 : a.rank - b.rank) * f.dir; });
     document.getElementById('tt').textContent = `Top ${Math.min(50, rows.length)} by ${f.sort === 'roi' ? 'return on cost' : 'expected value'}`;
-    document.getElementById('top').innerHTML = `<table class="cards"><thead><tr>
-      <th>#</th><th>Card</th><th class="num">Raw (TCGplayer)</th><th class="num">PSA 10 value</th><th class="num">Chance of 10</th><th class="num">EV / card</th><th class="num">ROI</th><th>Evidence</th></tr></thead><tbody>
-      ${top.map(({ c, r }, i) => `<tr class="row" data-id="${c.id}" tabindex="0">
-        <td class="num">${i + 1}</td>
+    const th = ([k, label, cls]) => { const on = f.col === k; const arrow = on ? (f.dir > 0 ? '▲' : '▼') : '↕';
+      return `<th class="${cls}" aria-sort="${on ? (f.dir > 0 ? 'ascending' : 'descending') : 'none'}"><button type="button" class="sort${on ? ' on' : ''}" data-col="${k}">${label}<span class="arr" aria-hidden="true">${arrow}</span></button></th>`; };
+    document.getElementById('top').innerHTML = `<table class="cards"><colgroup><col style="width:44px"><col><col style="width:128px"><col style="width:112px"><col style="width:108px"><col style="width:104px"><col style="width:76px"><col style="width:150px"></colgroup>
+      <thead><tr>${COLS.map(th).join('')}</tr></thead><tbody>
+      ${top.map(({ c, r, rank }) => `<tr class="row" data-id="${c.id}" tabindex="0">
+        <td class="num">${rank}</td>
         <td><div class="cname">${esc(c.name)}</div><div class="csub">${esc(c.set)} · ${esc(c.variant)} · #${esc(c.number)}</div></td>
         <td class="num">${usd(r.raw, 2)}</td><td class="num">${usd(r.v10.value)}</td><td class="num">${pct(r.p10)}</td>
         <td class="num ${evCls(r.ev)}">${signUsd(r.ev)}</td><td class="num ${evCls(r.ev)}">${pct(r.roi)}</td><td>${evidenceBadge(c, r)}</td></tr>`).join('')}
       </tbody></table>`;
+    document.querySelectorAll('button.sort').forEach((b) => b.addEventListener('click', () => {
+      const k = b.dataset.col;
+      if (f.col === k) f.dir = -f.dir; else { f.col = k; f.dir = (k === 'rank' || k === 'name') ? 1 : -1; }
+      renderTop();
+    }));
     document.getElementById('topnote').textContent = `${pos} of ${rows.length} cards shown have positive EV at your settings.` + (noData ? ` ${noData} card${noData > 1 ? 's have' : ' has'} no PSA 10 sales in 90 days and can't be ranked; search for them to see their sources.` : '');
     document.querySelectorAll('tr.row').forEach((tr) => {
       const go = (e) => { if (e.target.closest('a')) return; location.hash = '#card-' + tr.dataset.id; };
