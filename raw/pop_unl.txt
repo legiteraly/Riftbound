@@ -1,0 +1,60 @@
+022a~Jhin - Murderous Artist~AA~1~4~5
+024a~Rengar - Unseen~AA~1~2~3
+028a~Pyke - Dockside Butcher~AA~0~13~13
+029a~Red Brambleback~AA~1~4~5
+030a~Vi - Hotheaded~AA~2~13~15
+055a~Vex - Mocking~AA~0~1~1
+058a~Lillia - Protector of Dreams~AA~2~9~11
+059a~Master Yi - Unstoppable~AA~0~7~7
+060a~Vilemaw~AA~2~10~12
+079a~Diana - Lunari~AA~1~2~3
+082a~Lillia - Fae Fawn~AA~0~4~4
+087a~Blue Sentinel~AA~1~6~8
+089a~Jhin - Meticulous Killer~AA~3~10~13
+090a~LeBlanc - Everywhere at Once~AA~1~12~13
+113a~Master Yi - Tempered~AA~1~2~3
+116a~Poppy - Paragon~AA~1~1~2
+118a~Elder Dragon~AA~3~28~31
+119a~Kha'Zix - Evolving Hunter~AA~1~4~5
+120a~Rengar - Trophy Hunter~AA~4~13~17
+143a~Kha'Zix - Mutating Horror~AA~0~3~3
+145a~Pyke - Returned~AA~1~1~2
+147a~Baron Nashor~AA~8~31~39
+149a~Diana - No Longer Human~AA~2~11~13
+150a~Vex - Apathetic~AA~4~16~20
+172a~LeBlanc - Fragmented~AA~2~2~4
+176a~Vi - Peacekeeper~AA~2~0~2
+177a~Ivern - Friend to All~AA~1~6~7
+178a~Poppy - Defender of the Meek~AA~2~5~7
+179a~Rift Herald~AA~2~9~11
+220~Pouty Poro~ON~31~253~287
+221~Lonely Poro~ON~46~338~393
+222~Plundering Poro~ON~37~309~355
+223~Veteran Poro~ON~47~232~284
+224~Mystic Poro~ON~29~290~325
+225~Daring Poro~ON~32~274~309
+226~Jhin - Virtuoso~ON~8~82~90
+226*~Jhin - Virtuoso~SIG~27~202~235
+227~Rengar - Pridestalker~ON~6~101~107
+227*~Rengar - Pridestalker~SIG~35~180~220
+228~Pyke - Bloodharbor Ripper~ON~9~136~147
+228*~Pyke - Bloodharbor Ripper~SIG~23~240~266
+229~Vi - Piltover Enforcer~ON~8~143~154
+229*~Vi - Piltover Enforcer~SIG~52~272~328
+230~Lillia - Bashful Bloom~ON~15~95~113
+230*~Lillia - Bashful Bloom~SIG~24~198~228
+231~Master Yi - Wuju Master~ON~6~85~92
+231*~Master Yi - Wuju Master~SIG~31~221~259
+232~Vex - Gloomist~ON~20~124~146
+232*~Vex - Gloomist~SIG~32~252~289
+233~Ivern - Green Father~ON~6~87~93
+233*~Ivern - Green Father~SIG~17~174~197
+234~Diana - Scorn of the Moon~ON~33~338~372
+234*~Diana - Scorn of the Moon~SIG~38~391~433
+235~LeBlanc - Deceiver~ON~39~160~201
+235*~LeBlanc - Deceiver~SIG~72~292~371
+236~Kha'Zix - Voidreaver~ON~13~55~68
+236*~Kha'Zix - Voidreaver~SIG~25~186~215
+237~Poppy - Keeper of the Hammer~ON~7~76~83
+237*~Poppy - Keeper of the Hammer~SIG~19~238~259
+238~Baron Nashor~UR~66~703~785

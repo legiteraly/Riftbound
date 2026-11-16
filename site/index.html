@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Riftbound Grading EV · PSA</title>
+<meta name="description" content="Expected value of grading Riftbound cards at PSA, from PSA pop reports, TCGplayer raw prices and eBay sold PSA comps. Updated every Thursday.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <a href="#" class="brand"><span class="brand-mark">◆</span> Riftbound Grading EV <span class="brand-sub">PSA</span></a>
+    <div class="updated" id="updated"></div>
+  </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite">
+  <p class="loading">Loading card data…</p>
+</main>
+
+<footer class="wrap foot">
+  <p>Data: PSA Population Report, TCGplayer market prices, eBay sold listings (PSA 9 and PSA 10, last 90 days). Refreshed weekly on Thursdays.
+  EV is an estimate, not financial advice. Grade odds come from historical PSA results and won't match your own copies exactly.</p>
+</footer>
+
+<script src="ev.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

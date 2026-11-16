@@ -1,0 +1,48 @@
+027a~Darius - Trifarian~AA~5~46~51
+030a~Jinx - Demolitionist~AA~22~102~127
+039a~Kai'Sa - Survivor~AA~30~326~357
+041a~Volibear - Furious~AA~5~58~66
+066a~Ahri - Alluring~AA~48~144~198
+076a~Yasuo - Remorseful~AA~22~64~92
+078a~Lee Sin - Ascetic~AA~11~125~138
+079a~Leona - Zealot~AA~23~107~132
+112a~Kai'Sa - Evolutionary~AA~24~86~111
+117a~Viktor - Innovator~AA~9~24~34
+119a~Ahri - Inquisitive~AA~52~315~370
+121a~Teemo - Strategist~AA~24~172~200
+151a~Lee Sin - Centered~AA~20~68~91
+158a~Volibear - Imposing~AA~6~35~42
+162a~Miss Fortune - Captain~AA~28~266~299
+164a~Sett - Brawler~AA~13~98~115
+193a~Miss Fortune - Buccaneer~AA~25~95~125
+197a~Teemo - Scout~AA~46~259~310
+202a~Jinx - Rebel~AA~32~166~203
+205a~Yasuo - Windrider~AA~15~151~169
+238a~Leona - Determined~AA~10~33~43
+240a~Sett - Kingpin~AA~9~26~36
+243a~Darius - Executioner~AA~19~81~103
+246a~Viktor - Leader~AA~18~87~105
+299~Kai'Sa - Daughter of the Void~ON~164~1050~1232
+299*~Kai'Sa - Daughter of the Void~SIG~82~504~603
+300~Volibear - Relentless Storm~ON~52~329~382
+300*~Volibear - Relentless Storm~SIG~37~347~390
+301~Jinx - Loose Cannon~ON~72~679~759
+301*~Jinx - Loose Cannon~SIG~42~417~469
+302~Darius - Hand of Noxus~ON~50~410~463
+302*~Darius - Hand of Noxus~SIG~59~328~401
+303~Ahri - Nine-Tailed Fox~ON~162~1297~1474
+303*~Ahri - Nine-Tailed Fox~SIG~61~538~611
+304~Lee Sin - Blind Monk~ON~89~718~818
+304*~Lee Sin - Blind Monk~SIG~85~426~516
+305~Yasuo - Unforgiven~ON~80~522~616
+305*~Yasuo - Unforgiven~SIG~49~377~434
+306~Leona - Radiant Dawn~ON~33~372~410
+306*~Leona - Radiant Dawn~SIG~44~323~371
+307~Teemo - Swift Scout~ON~92~713~818
+307*~Teemo - Swift Scout~SIG~94~422~525
+308~Viktor - Herald of the Arcane~ON~48~421~474
+308*~Viktor - Herald of the Arcane~SIG~36~337~375
+309~Miss Fortune - Bounty Hunter~ON~67~613~688
+309*~Miss Fortune - Bounty Hunter~SIG~68~437~516
+310~Sett - The Boss~ON~43~383~433
+310*~Sett - The Boss~SIG~46~324~374
