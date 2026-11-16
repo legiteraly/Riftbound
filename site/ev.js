@@ -5,6 +5,8 @@
     gradingFee: 40,     // PSA fee per card
     shipping: 1,        // shipping to PSA, per card
     sellFee: 11,        // % taken when you sell (eBay ~11%, in person 10-20%)
+    sellMode: 'ebay',   // 'ebay' locks sellFee at 11; 'custom' uses customSellFee
+    customSellFee: 15,  // the user's own fee when selling in person / elsewhere
     valueDrop: 25,      // % price drop assumed over the ~80-90 day PSA turnaround
     thinMin: 5,         // fewer PSA 10 sales than this in 90 days = Evidence: Thin
     priorWeight: 10,    // how many "virtual" graded copies the set average counts for

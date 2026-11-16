@@ -151,3 +151,4 @@ details.tv th:first-child, details.tv td:first-child { text-align: left; }
 .sources ul { margin: 0; padding-left: 18px; }
 .sources li { margin: 4px 0; font-size: 14px; }
 .foot { color: var(--text-muted); font-size: 12.5px; padding-top: 10px; padding-bottom: 40px; }
+.assume input:disabled { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; }

@@ -12,7 +12,8 @@
   const signUsd = (v) => { if (v == null) return '—'; v = Math.round(v); return (v > 0 ? '+' : '') + usd(v === 0 ? 0 : v); };
   const fmtDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const shortDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
-  function loadOpts() { try { return Object.assign({}, E.DEFAULTS, JSON.parse(localStorage.getItem('riftev-opts') || '{}')); } catch (e) { return Object.assign({}, E.DEFAULTS); } }
+  function loadOpts() { let o; try { o = Object.assign({}, E.DEFAULTS, JSON.parse(localStorage.getItem('riftev-opts') || '{}')); } catch (e) { o = Object.assign({}, E.DEFAULTS); } return applySellMode(o); }
+  function applySellMode(o) { o.sellFee = o.sellMode === 'custom' ? o.customSellFee : E.DEFAULTS.sellFee; return o; }
   function saveOpts() { try { localStorage.setItem('riftev-opts', JSON.stringify(S.opts)); } catch (e) { /* storage unavailable */ } }
   const evalCard = (c) => E.evaluate(c, S.opts, S.pri, S.data.updated);
   const byId = (id) => S.data.cards.find((c) => c.id === id);
@@ -46,22 +47,22 @@
   // ---------- assumptions panel ----------
   function assumptionsHTML() {
     const o = S.opts;
-    const sellPreset = o.sellFee === 11 ? 'ebay' : 'custom';
+    const custom = o.sellMode === 'custom';
     return `<div class="panel"><h2>Your costs &amp; assumptions</h2>
     <div class="assume">
       <div><label for="o-fee">PSA grading fee / card</label><input id="o-fee" type="number" min="0" step="1" value="${o.gradingFee}"><div class="hint">Your PSA service level</div></div>
       <div><label for="o-ship">Shipping to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split across the submission</div></div>
-      <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${sellPreset === 'ebay' ? 'selected' : ''}>eBay (~11%)</option><option value="custom" ${sellPreset === 'custom' ? 'selected' : ''}>In person / custom</option></select></div>
-      <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" value="${o.sellFee}"><div class="hint">In person is usually 10–20%</div></div>
+      <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select></div>
+      <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" value="${o.sellFee}" ${custom ? '' : 'disabled title="Choose In person / custom to edit"'}><div class="hint">${custom ? 'In person is usually 10–20%' : 'Set by eBay; choose custom to edit'}</div></div>
       <div><label for="o-drop">Value drop during grading %</label><input id="o-drop" type="number" min="0" max="90" step="1" value="${o.valueDrop}"><div class="hint">PSA bulk takes ~80–90 days</div></div>
       <div><button class="reset" id="o-reset" type="button">Reset to defaults</button></div>
     </div></div>`;
   }
   function bindAssumptions(rerender) {
-    const num = (id, key) => document.getElementById(id).addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) { S.opts[key] = v; saveOpts(); rerender(); } });
-    num('o-fee', 'gradingFee'); num('o-ship', 'shipping'); num('o-sell', 'sellFee'); num('o-drop', 'valueDrop');
-    document.getElementById('o-sellp').addEventListener('change', (e) => { if (e.target.value === 'ebay') S.opts.sellFee = 11; else if (S.opts.sellFee === 11) S.opts.sellFee = 15; saveOpts(); rerender(); });
-    document.getElementById('o-reset').addEventListener('click', () => { S.opts = Object.assign({}, E.DEFAULTS); saveOpts(); rerender(); });
+    const num = (id, key) => document.getElementById(id).addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) { S.opts[key] = v; applySellMode(S.opts); saveOpts(); rerender(); } });
+    num('o-fee', 'gradingFee'); num('o-ship', 'shipping'); num('o-sell', 'customSellFee'); num('o-drop', 'valueDrop');
+    document.getElementById('o-sellp').addEventListener('change', (e) => { S.opts.sellMode = e.target.value; applySellMode(S.opts); saveOpts(); rerender(); });
+    document.getElementById('o-reset').addEventListener('click', () => { S.opts = applySellMode(Object.assign({}, E.DEFAULTS)); saveOpts(); rerender(); });
   }
 
   // ---------- home ----------
