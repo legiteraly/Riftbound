@@ -51,7 +51,7 @@
     return `<div class="panel"><div class="panel-head"><h2>Your costs &amp; assumptions</h2><button class="reset" id="o-reset" type="button">Reset to defaults</button></div>
     <div class="assume">
       <div><label for="o-fee">PSA grading fee / card</label><input id="o-fee" type="number" min="0" step="1" value="${o.gradingFee}"><div class="hint">Your PSA service level</div></div>
-      <div><label for="o-ship">Shipping to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split per card</div></div>
+      <div><label for="o-ship">Shipping cost to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split per card</div></div>
       <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select><div class="hint">Pick custom to set your own fee</div></div>
       <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" value="${o.sellFee}" ${custom ? '' : 'disabled title="Choose In person / custom to edit"'}><div class="hint">${custom ? 'In person is usually 10–20%' : 'Set by eBay; choose custom to edit'}</div></div>
       <div><label for="o-drop">Value drop during grading %</label><input id="o-drop" type="number" min="0" max="90" step="1" value="${o.valueDrop}"><div class="hint">PSA bulk takes ~80–90 days</div></div>
@@ -164,6 +164,14 @@
     q.addEventListener('blur', () => setTimeout(() => { ul.hidden = true; }, 150));
   }
 
+  // Card art is loaded straight from TCGplayer's image server (not copied into this repo).
+  function cardImage(c) {
+    const pid = c.links.tcgplayer && (c.links.tcgplayer.match(/product\/(\d+)/) || [])[1];
+    if (!pid) return '<div class="card-img none">No image</div>';
+    const src = `https://tcgplayer-cdn.tcgplayer.com/product/${pid}_in_1000x1000.jpg`;
+    return `<a class="card-img" href="${esc(c.links.tcgplayer)}" target="_blank" rel="noopener" title="View on TCGplayer"><img src="${src}" alt="${esc(c.name)} (${esc(c.variant)}) card" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('none');this.parentNode.textContent='No image'"></a>`;
+  }
+
   // ---------- card page ----------
   let soldRange = 30;
   function renderCard(c) {
@@ -176,8 +184,8 @@
     $app.innerHTML = `
       <a href="#" class="back">← All cards</a>
       <div class="card-head">
-        <div><h1>${esc(c.name)}</h1>
-          <div class="tags"><span class="tag">${esc(c.set)}</span><span class="tag">${esc(c.variant)}</span><span class="tag">#${esc(c.number)}</span>${evidenceBadge(c, r)}</div></div>
+        <div class="head-left">${cardImage(c)}<div><h1>${esc(c.name)}</h1>
+          <div class="tags"><span class="tag">${esc(c.set)}</span><span class="tag">${esc(c.variant)}</span><span class="tag">#${esc(c.number)}</span>${evidenceBadge(c, r)}</div></div></div>
         <div class="hero"><div class="big ${evCls(r.ev)}">${signUsd(r.ev)}</div><div class="lbl">Expected profit per card graded${r.roi != null ? ` · ROI ${pct(r.roi)}` : ''}</div></div>
       </div>
       ${thinBox}
