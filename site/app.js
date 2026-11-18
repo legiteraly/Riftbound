@@ -215,21 +215,26 @@
       : r.thin ? `<div class="thin-box"><b>Evidence: Thin.</b> Only ${r.v10.n90} PSA 10 sale${r.v10.n90 > 1 ? 's' : ''} in 90 days, so the PSA 10 value may not hold. <a href="${esc(c.links.ebaySold)}" target="_blank" rel="noopener">Review the sold listings on eBay →</a></div>` : '';
     $app.innerHTML = `
       <a href="#" class="back">← All cards</a>
-      <div class="card-head">
-        <div class="head-left">${cardImage(c)}<div><h1>${esc(c.name)}</h1>
-          <div class="tags"><span class="tag">${esc(c.set)}</span><span class="tag">${esc(c.variant)}</span><span class="tag">#${esc(c.number)}</span>${evidenceBadge(c, r)}</div></div></div>
-        <div class="hero"><div class="big ${evCls(r.ev)}">${signUsd(r.ev)}</div><div class="lbl">Expected profit per card graded${r.roi != null ? ` · ROI ${pct(r.roi)}` : ''}</div></div>
-      </div>
-      ${thinBox}
-      <div class="tiles">
-        <div class="tile"><div class="k">Raw price (TCGplayer market)</div><div class="v">${usd(r.raw, 2)}</div><div class="s">Lowest listing ${usd(c.raw.low, 2)}</div></div>
-        <div class="tile"><div class="k">PSA 10 value</div><div class="v">${usd(r.v10.value)}</div><div class="s">${r.v10.basis}${r.v10.n ? `, ${plural(r.v10.n, 'sale')}` : ''}</div></div>
-        <div class="tile"><div class="k">PSA 9 value</div><div class="v">${usd(r.v9.value)}</div><div class="s">${r.v9.basis}${r.v9.n ? `, ${plural(r.v9.n, 'sale')}` : ''}</div></div>
-        <div class="tile"><div class="k">PSA population</div><div class="v">${c.pop.total.toLocaleString()}</div><div class="s">${c.pop.psa10.toLocaleString()} × 10 · ${c.pop.psa9.toLocaleString()} × 9</div></div>
-      </div>
-      <div class="grid2">
-        <div class="panel"><h2>How the EV adds up</h2>${breakdownHTML(r)}</div>
-        ${assumptionsHTML()}
+      <div class="card-layout">
+        <aside class="card-side">
+          ${cardImage(c)}
+          ${c.links.tcgplayer ? `<a class="side-link" href="${esc(c.links.tcgplayer)}" target="_blank" rel="noopener">View on TCGplayer →</a>` : ''}
+          ${assumptionsHTML()}
+        </aside>
+        <div class="card-main">
+          <div class="mobile-img">${cardImage(c)}</div>
+          <h1>${esc(c.name)}</h1>
+          <div class="tags"><span class="tag">${esc(c.set)}</span><span class="tag">${esc(c.variant)}</span><span class="tag">#${esc(c.number)}</span>${evidenceBadge(c, r)}</div>
+          <div class="hero"><div class="big ${evCls(r.ev)}">${signUsd(r.ev)}</div><div class="lbl">Expected profit per card graded${r.roi != null ? ` · ROI ${pct(r.roi)}` : ''}</div></div>
+          ${thinBox}
+          <div class="tiles tiles-2">
+            <div class="tile"><div class="k">Raw price (TCGplayer market)</div><div class="v">${usd(r.raw, 2)}</div><div class="s">Lowest listing ${usd(c.raw.low, 2)}</div></div>
+            <div class="tile"><div class="k">PSA 10 value</div><div class="v">${usd(r.v10.value)}</div><div class="s">${r.v10.basis}${r.v10.n ? `, ${plural(r.v10.n, 'sale')}` : ''}</div></div>
+            <div class="tile"><div class="k">PSA population</div><div class="v">${c.pop.total.toLocaleString()}</div><div class="s">${c.pop.psa10.toLocaleString()} × 10 · ${c.pop.psa9.toLocaleString()} × 9</div></div>
+            <div class="tile"><div class="k">PSA 9 value</div><div class="v">${usd(r.v9.value)}</div><div class="s">${r.v9.basis}${r.v9.n ? `, ${plural(r.v9.n, 'sale')}` : ''}</div></div>
+          </div>
+          <div class="panel"><h2>How the EV adds up</h2>${breakdownHTML(r)}</div>
+        </div>
       </div>
       <div class="grid2">
         <div class="panel"><h2>Sold price, last 90 days</h2><div id="ch-price"></div></div>
