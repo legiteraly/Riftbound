@@ -59,10 +59,14 @@
     const thin = v10.n90 < o.thinMin;
 
     const keep = (1 - o.valueDrop / 100) * (1 - o.sellFee / 100);
-    const cost = (raw || 0) + o.gradingFee + o.shipping;
+    // What you pay can be overridden (opts.buyPrice); resale of a cracked 9/8 still uses the TCGplayer price.
+    const customBuy = o.buyPrice !== undefined;
+    const buy = customBuy ? o.buyPrice : raw;
+    const needBuy = customBuy && (buy == null || isNaN(buy));
+    const cost = (buy || 0) + o.gradingFee + o.shipping;
     const needFee = o.sellFee == null || isNaN(o.sellFee);
-    if (raw == null || v10.value == null || needFee) {
-      return { p10, p9, pLow, v10, v9, raw, cost, thin, ev: null, roi: null, outcomes: null, needFee };
+    if (raw == null || v10.value == null || needFee || needBuy) {
+      return { p10, p9, pLow, v10, v9, raw, buy, customBuy, cost, thin, ev: null, roi: null, outcomes: null, needFee, needBuy };
     }
     // A 9 (or lower) can be cracked and sold raw, so it is worth at least the raw price.
     const sale9 = Math.max(v9.value || 0, raw);
@@ -73,7 +77,7 @@
     ];
     const expected = outcomes.reduce((s, x) => s + x.prob * x.net, 0);
     const ev = expected - cost;
-    return { p10, p9, pLow, v10, v9, raw, cost, expected, thin, ev, roi: ev / cost, outcomes, keep };
+    return { p10, p9, pLow, v10, v9, raw, buy, customBuy, cost, expected, thin, ev, roi: ev / cost, outcomes, keep };
   }
 
   root.RiftEV = { DEFAULTS, evaluate, priors, gradeValue, median, daysBefore };

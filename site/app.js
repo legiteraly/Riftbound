@@ -17,6 +17,9 @@
   function applySellMode(o) { o.sellFee = o.sellMode === 'custom' ? o.customSellFee : E.DEFAULTS.sellFee; return o; }
   function saveOpts() { try { const { sellMode, customSellFee, sellFee, ...keep } = S.opts; localStorage.setItem('riftev-opts', JSON.stringify(keep)); } catch (e) { /* storage unavailable */ } }
   const evalCard = (c) => E.evaluate(c, S.opts, S.pri, S.data.updated);
+  // Custom cost lives only in memory for the card being viewed; it resets on reload or when another card is opened.
+  const buyState = { id: null, on: false, value: null };
+  const evalCardPage = (c) => E.evaluate(c, buyState.on ? Object.assign({}, S.opts, { buyPrice: buyState.value }) : S.opts, S.pri, S.data.updated);
   const byId = (id) => S.data.cards.find((c) => c.id === id);
   const evCls = (v) => v == null || Math.round(v) === 0 ? '' : v > 0 ? 'pos' : 'neg';
 
@@ -46,11 +49,14 @@
   }
 
   // ---------- assumptions panel ----------
-  function assumptionsHTML() {
+  function assumptionsHTML(card) {
     const o = S.opts;
     const custom = o.sellMode === 'custom';
     return `<div class="panel"><div class="panel-head"><h2>Your costs &amp; assumptions</h2><button class="reset" id="o-reset" type="button">Reset to defaults</button></div>
     <div class="assume">
+      ${card ? `<div class="buy-field"><label class="chk-inline"><input type="checkbox" id="o-buy-on" ${buyState.on ? 'checked' : ''}> Enter custom cost</label>
+        <input id="o-buy" type="number" min="0" step="0.01" inputmode="decimal" aria-label="Your cost for this card">
+        <div class="hint" id="o-buy-hint"></div></div>` : ''}
       <div><label for="o-fee">PSA grading fee / card</label><input id="o-fee" type="number" min="0" step="1" value="${o.gradingFee}"><div class="hint">Your PSA service level</div></div>
       <div><label for="o-ship">Shipping cost to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split per card</div></div>
       <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select><div class="hint">Pick custom to set your own fee</div></div>
@@ -87,7 +93,7 @@
       applySellMode(S.opts); syncSellUI(); rerender();
       if (S.opts.sellMode === 'custom') { const b = document.getElementById('o-sell'); if (b) b.focus(); }
     });
-    document.getElementById('o-reset').addEventListener('click', () => { S.opts = applySellMode(Object.assign({}, E.DEFAULTS)); saveOpts(); syncSellUI(); rerender(); });
+    document.getElementById('o-reset').addEventListener('click', () => { buyState.on = false; buyState.value = null; S.opts = applySellMode(Object.assign({}, E.DEFAULTS)); saveOpts(); syncSellUI(); rerender(); });
   }
 
   // ---------- home ----------
@@ -214,7 +220,8 @@
   // ---------- card page ----------
   let soldRange = 30;
   function renderCard(c) {
-    const r = evalCard(c);
+    if (buyState.id !== c.id) { buyState.id = c.id; buyState.on = false; buyState.value = null; }
+    const r = evalCardPage(c);
     const hist = S.hist[c.id] || [];
     const cut30 = E.daysBefore(S.data.updated, 30);
     const thinBox = r.v10.n90 === 0
@@ -226,7 +233,7 @@
         <aside class="card-side">
           ${cardImage(c)}
           ${c.links.tcgplayer ? `<a class="side-link" href="${esc(c.links.tcgplayer)}" target="_blank" rel="noopener">View on TCGplayer →</a>` : ''}
-          ${assumptionsHTML()}
+          ${assumptionsHTML(c)}
         </aside>
         <div class="card-main">
           <div class="mobile-img">${cardImage(c)}</div>
@@ -257,6 +264,7 @@
         <li class="note">Collected ${fmtDate(S.data.updated)}. Sales older than 30 days are listed by date and price only.</li>
       </ul></div>`;
     bindAssumptions(() => renderCard(c));
+    bindBuy(c);
     priceChart(document.getElementById('ch-price'), c, hist);
     popChart(document.getElementById('ch-pop'), hist);
     const drawSold = () => {
@@ -271,14 +279,30 @@
     drawSold();
   }
 
+  function bindBuy(c) {
+    const on = document.getElementById('o-buy-on'), box = document.getElementById('o-buy'), hint = document.getElementById('o-buy-hint');
+    if (!on) return;
+    box.disabled = !buyState.on;
+    box.value = buyState.on ? (buyState.value == null ? '' : buyState.value) : (c.raw.market == null ? '' : c.raw.market.toFixed(2));
+    box.placeholder = buyState.on ? 'Enter $' : '';
+    const missing = buyState.on && buyState.value == null;
+    box.classList.toggle('need', missing); hint.classList.toggle('need', missing);
+    hint.textContent = !buyState.on ? 'Your cost / card — TCGplayer price shown' : missing ? 'Enter what you paid or will pay' : 'Your cost / card';
+    on.addEventListener('change', () => { buyState.on = on.checked; buyState.value = null; renderCard(c); if (buyState.on) { const b = document.getElementById('o-buy'); if (b) b.focus(); } });
+    const set = () => { const v = parseFloat(box.value); buyState.value = isNaN(v) || v < 0 ? null : v; renderCard(c); };
+    box.addEventListener('change', set);
+    box.addEventListener('keydown', (e) => { if (e.key === 'Enter') set(); });
+  }
+
   function breakdownHTML(r) {
     if (r.needFee) return '<p class="need-msg">Enter your selling fee in <b>Your costs &amp; assumptions</b> to see EV.</p>';
+    if (r.needBuy) return '<p class="need-msg">Enter your custom cost in <b>Your costs &amp; assumptions</b> to see EV.</p>';
     if (!r.outcomes) return `<p class="note">Not enough data to calculate. ${r.raw == null ? 'No TCGplayer raw price.' : 'No PSA 10 sales in 90 days.'}</p>`;
     const o = S.opts;
     return `<table class="brk"><thead><tr><th>Outcome</th><th class="num">Chance</th><th class="num">Sells for</th><th class="num">You keep*</th></tr></thead><tbody>
       ${r.outcomes.map((x) => `<tr><td>${x.label}${x.note ? ` <span class="note">(${x.note})</span>` : ''}</td><td class="num">${pct(x.prob, 1)}</td><td class="num">${usd(x.sale)}</td><td class="num">${usd(x.net)}</td></tr>`).join('')}
       <tr class="total"><td>Expected sale proceeds</td><td></td><td></td><td class="num">${usd(r.expected)}</td></tr>
-      <tr><td>Buy raw card</td><td></td><td></td><td class="num">−${usd(r.raw)}</td></tr>
+      <tr><td>${r.customBuy ? 'Buy card (your cost)' : 'Buy raw card (TCGplayer)'}</td><td></td><td></td><td class="num">−${usd(r.buy, r.customBuy ? 2 : 0)}</td></tr>
       <tr><td>PSA fee + shipping</td><td></td><td></td><td class="num">−${usd(o.gradingFee + o.shipping, 2)}</td></tr>
       <tr class="total"><td>Expected profit</td><td></td><td></td><td class="num ${evCls(r.ev)}">${signUsd(r.ev)}</td></tr></tbody></table>
       <p class="note">*After a ${o.valueDrop}% value drop over PSA's turnaround and a ${o.sellFee}% selling fee. Grade chances come from this card's PSA population, blended with the set average when few copies have been graded.</p>`;
