@@ -2,7 +2,7 @@
 (function () {
   const E = window.RiftEV;
   const $app = document.getElementById('app');
-  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, showSig: true, sort: 'ev', col: 'rank', dir: 1 } };
+  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, showSig: true, sort: 'roi', col: 'rank', dir: 1 } };
 
   // ---------- helpers ----------
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -107,7 +107,7 @@
         <div class="controls">
           <select id="f-set" aria-label="Set"><option value="">All sets</option>${sets.map((s) => `<option ${f.set === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
           <select id="f-var" aria-label="Variant"><option value="">All variants</option>${variants.map((s) => `<option ${f.variant === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
-          <select id="f-sort" aria-label="Pick the top 50 by"><option value="ev" ${f.sort === 'ev' ? 'selected' : ''}>Top 50 by EV ($)</option><option value="roi" ${f.sort === 'roi' ? 'selected' : ''}>Top 50 by ROI (%)</option></select>
+          <select id="f-sort" aria-label="Pick the top 50 by"><option value="roi" ${f.sort === 'roi' ? 'selected' : ''}>Top 50 by ROI (%)</option><option value="ev" ${f.sort === 'ev' ? 'selected' : ''}>Top 50 by EV ($)</option></select>
           <label class="chk" id="f-sig-lbl"><input type="checkbox" id="f-sig" ${f.showSig ? 'checked' : ''}> Include signature cards</label>
           <label class="chk"><input type="checkbox" id="f-thin" ${f.hideThin ? 'checked' : ''}> Hide “Evidence: Thin”</label>
         </div>
@@ -134,7 +134,7 @@
     sigBox.title = sigOnly ? 'Variant filter is set to Signature' : '';
     let rows = S.data.cards.filter((c) => (!f.set || c.set === f.set) && (!f.variant || c.variant === f.variant) && (sigOnly || f.showSig || c.variant !== 'Signature')).map((c) => ({ c, r: evalCard(c) }));
     if (S.opts.sellFee == null) {
-      document.getElementById('tt').textContent = 'Top 50 by expected value';
+      document.getElementById('tt').textContent = `Top 50 by ${f.sort === 'roi' ? 'return on cost' : 'expected value'}`;
       document.getElementById('top').innerHTML = '<p class="need-msg">Enter your selling fee in <b>Your costs &amp; assumptions</b> to see EV.</p>';
       document.getElementById('topnote').textContent = '';
       return;
