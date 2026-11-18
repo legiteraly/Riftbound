@@ -2,7 +2,7 @@
 (function () {
   const E = window.RiftEV;
   const $app = document.getElementById('app');
-  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, sort: 'ev', col: 'rank', dir: 1 } };
+  const S = { data: null, hist: {}, pri: null, opts: loadOpts(), filt: { set: '', variant: '', hideThin: false, showSig: true, sort: 'ev', col: 'rank', dir: 1 } };
 
   // ---------- helpers ----------
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -108,6 +108,7 @@
           <select id="f-set" aria-label="Set"><option value="">All sets</option>${sets.map((s) => `<option ${f.set === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
           <select id="f-var" aria-label="Variant"><option value="">All variants</option>${variants.map((s) => `<option ${f.variant === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}</select>
           <select id="f-sort" aria-label="Pick the top 50 by"><option value="ev" ${f.sort === 'ev' ? 'selected' : ''}>Top 50 by EV ($)</option><option value="roi" ${f.sort === 'roi' ? 'selected' : ''}>Top 50 by ROI (%)</option></select>
+          <label class="chk" id="f-sig-lbl"><input type="checkbox" id="f-sig" ${f.showSig ? 'checked' : ''}> Include signature cards</label>
           <label class="chk"><input type="checkbox" id="f-thin" ${f.hideThin ? 'checked' : ''}> Hide “Evidence: Thin”</label>
         </div>
         <div class="tbl-wrap" id="top"></div>
@@ -120,12 +121,18 @@
     document.getElementById('f-var').addEventListener('change', upd('variant'));
     document.getElementById('f-sort').addEventListener('change', (e) => { S.filt.sort = e.target.value; S.filt.col = 'rank'; S.filt.dir = 1; renderTop(); });
     document.getElementById('f-thin').addEventListener('change', upd('hideThin'));
+    document.getElementById('f-sig').addEventListener('change', upd('showSig'));
     bindSearch();
   }
 
   function renderTop() {
     const f = S.filt;
-    let rows = S.data.cards.filter((c) => (!f.set || c.set === f.set) && (!f.variant || c.variant === f.variant)).map((c) => ({ c, r: evalCard(c) }));
+    // The signature checkbox does nothing (and greys out) when the variant filter already picks Signature only.
+    const sigOnly = f.variant === 'Signature';
+    const sigBox = document.getElementById('f-sig');
+    sigBox.disabled = sigOnly; document.getElementById('f-sig-lbl').classList.toggle('off', sigOnly);
+    sigBox.title = sigOnly ? 'Variant filter is set to Signature' : '';
+    let rows = S.data.cards.filter((c) => (!f.set || c.set === f.set) && (!f.variant || c.variant === f.variant) && (sigOnly || f.showSig || c.variant !== 'Signature')).map((c) => ({ c, r: evalCard(c) }));
     if (S.opts.sellFee == null) {
       document.getElementById('tt').textContent = 'Top 50 by expected value';
       document.getElementById('top').innerHTML = '<p class="need-msg">Enter your selling fee in <b>Your costs &amp; assumptions</b> to see EV.</p>';
