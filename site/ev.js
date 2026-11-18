@@ -6,7 +6,7 @@
     shipping: 1,        // shipping to PSA, per card
     sellFee: 11,        // % taken when you sell (eBay ~11%, in person 10-20%)
     sellMode: 'ebay',   // 'ebay' locks sellFee at 11; 'custom' uses customSellFee
-    customSellFee: 15,  // the user's own fee when selling in person / elsewhere
+    customSellFee: null, // the user's own fee when selling in person / elsewhere (must be entered)
     valueDrop: 25,      // % price drop assumed over the ~80-90 day PSA turnaround
     thinMin: 5,         // fewer PSA 10 sales than this in 90 days = Evidence: Thin
     priorWeight: 10,    // how many "virtual" graded copies the set average counts for
@@ -60,8 +60,9 @@
 
     const keep = (1 - o.valueDrop / 100) * (1 - o.sellFee / 100);
     const cost = (raw || 0) + o.gradingFee + o.shipping;
-    if (raw == null || v10.value == null) {
-      return { p10, p9, pLow, v10, v9, raw, cost, thin, ev: null, roi: null, outcomes: null };
+    const needFee = o.sellFee == null || isNaN(o.sellFee);
+    if (raw == null || v10.value == null || needFee) {
+      return { p10, p9, pLow, v10, v9, raw, cost, thin, ev: null, roi: null, outcomes: null, needFee };
     }
     // A 9 (or lower) can be cracked and sold raw, so it is worth at least the raw price.
     const sale9 = Math.max(v9.value || 0, raw);

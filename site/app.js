@@ -12,9 +12,10 @@
   const signUsd = (v) => { if (v == null) return '—'; v = Math.round(v); return (v > 0 ? '+' : '') + usd(v === 0 ? 0 : v); };
   const fmtDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   const shortDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
-  function loadOpts() { let o; try { o = Object.assign({}, E.DEFAULTS, JSON.parse(localStorage.getItem('riftev-opts') || '{}')); } catch (e) { o = Object.assign({}, E.DEFAULTS); } return applySellMode(o); }
+  function loadOpts() { let o; try { o = Object.assign({}, E.DEFAULTS, JSON.parse(localStorage.getItem('riftev-opts') || '{}')); } catch (e) { o = Object.assign({}, E.DEFAULTS); }
+    o.sellMode = 'ebay'; o.customSellFee = null; return applySellMode(o); } // every visit starts on eBay 11%
   function applySellMode(o) { o.sellFee = o.sellMode === 'custom' ? o.customSellFee : E.DEFAULTS.sellFee; return o; }
-  function saveOpts() { try { localStorage.setItem('riftev-opts', JSON.stringify(S.opts)); } catch (e) { /* storage unavailable */ } }
+  function saveOpts() { try { const { sellMode, customSellFee, sellFee, ...keep } = S.opts; localStorage.setItem('riftev-opts', JSON.stringify(keep)); } catch (e) { /* storage unavailable */ } }
   const evalCard = (c) => E.evaluate(c, S.opts, S.pri, S.data.updated);
   const byId = (id) => S.data.cards.find((c) => c.id === id);
   const evCls = (v) => v == null || Math.round(v) === 0 ? '' : v > 0 ? 'pos' : 'neg';
@@ -53,15 +54,40 @@
       <div><label for="o-fee">PSA grading fee / card</label><input id="o-fee" type="number" min="0" step="1" value="${o.gradingFee}"><div class="hint">Your PSA service level</div></div>
       <div><label for="o-ship">Shipping cost to PSA / card</label><input id="o-ship" type="number" min="0" step="0.5" value="${o.shipping}"><div class="hint">Bulk shipping split per card</div></div>
       <div><label for="o-sellp">Where you sell</label><select id="o-sellp"><option value="ebay" ${custom ? '' : 'selected'}>eBay (11%)</option><option value="custom" ${custom ? 'selected' : ''}>In person / custom</option></select><div class="hint">Pick custom to set your own fee</div></div>
-      <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" value="${o.sellFee}" ${custom ? '' : 'disabled title="Choose In person / custom to edit"'}><div class="hint">${custom ? 'In person is usually 10–20%' : 'Set by eBay; choose custom to edit'}</div></div>
+      <div><label for="o-sell">Selling fee %</label><input id="o-sell" type="number" min="0" max="50" step="0.5" inputmode="decimal"><div class="hint" id="o-sell-hint"></div></div>
       <div><label for="o-drop">Value drop during grading %</label><input id="o-drop" type="number" min="0" max="90" step="1" value="${o.valueDrop}"><div class="hint">PSA bulk takes ~80–90 days</div></div>
     </div></div>`;
   }
+  // Keep the selling-fee box in step with the dropdown without redrawing the panel.
+  function syncSellUI() {
+    const o = S.opts, box = document.getElementById('o-sell'), hint = document.getElementById('o-sell-hint'), sel = document.getElementById('o-sellp');
+    if (!box) return;
+    const custom = o.sellMode === 'custom';
+    sel.value = custom ? 'custom' : 'ebay';
+    box.disabled = !custom;
+    box.value = custom ? (o.customSellFee == null ? '' : o.customSellFee) : E.DEFAULTS.sellFee;
+    box.placeholder = custom ? 'Enter %' : '';
+    box.title = custom ? '' : 'Choose In person / custom to edit';
+    const missing = custom && o.customSellFee == null;
+    box.classList.toggle('need', missing);
+    hint.textContent = !custom ? 'Set by eBay; choose custom to edit' : missing ? 'Enter your fee (usually 10–20%)' : 'In person is usually 10–20%';
+    hint.classList.toggle('need', missing);
+  }
   function bindAssumptions(rerender) {
-    const num = (id, key) => document.getElementById(id).addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) { S.opts[key] = v; applySellMode(S.opts); saveOpts(); rerender(); } });
-    num('o-fee', 'gradingFee'); num('o-ship', 'shipping'); num('o-sell', 'customSellFee'); num('o-drop', 'valueDrop');
-    document.getElementById('o-sellp').addEventListener('change', (e) => { S.opts.sellMode = e.target.value; applySellMode(S.opts); saveOpts(); rerender(); });
-    document.getElementById('o-reset').addEventListener('click', () => { S.opts = applySellMode(Object.assign({}, E.DEFAULTS)); saveOpts(); rerender(); });
+    syncSellUI();
+    const num = (id, key) => document.getElementById(id).addEventListener('change', (e) => { const v = parseFloat(e.target.value); if (!isNaN(v)) { S.opts[key] = v; saveOpts(); rerender(); } });
+    num('o-fee', 'gradingFee'); num('o-ship', 'shipping'); num('o-drop', 'valueDrop');
+    const sell = document.getElementById('o-sell');
+    const setFee = () => { const v = parseFloat(sell.value); S.opts.customSellFee = isNaN(v) ? null : Math.min(Math.max(v, 0), 50); applySellMode(S.opts); syncSellUI(); rerender(); };
+    sell.addEventListener('change', setFee);
+    sell.addEventListener('keydown', (e) => { if (e.key === 'Enter') setFee(); });
+    document.getElementById('o-sellp').addEventListener('change', (e) => {
+      S.opts.sellMode = e.target.value;
+      if (S.opts.sellMode === 'custom') S.opts.customSellFee = null; // take the 11% away; the user must enter their own
+      applySellMode(S.opts); syncSellUI(); rerender();
+      if (S.opts.sellMode === 'custom') { const b = document.getElementById('o-sell'); if (b) b.focus(); }
+    });
+    document.getElementById('o-reset').addEventListener('click', () => { S.opts = applySellMode(Object.assign({}, E.DEFAULTS)); saveOpts(); syncSellUI(); rerender(); });
   }
 
   // ---------- home ----------
@@ -100,6 +126,12 @@
   function renderTop() {
     const f = S.filt;
     let rows = S.data.cards.filter((c) => (!f.set || c.set === f.set) && (!f.variant || c.variant === f.variant)).map((c) => ({ c, r: evalCard(c) }));
+    if (S.opts.sellFee == null) {
+      document.getElementById('tt').textContent = 'Top 50 by expected value';
+      document.getElementById('top').innerHTML = '<p class="need-msg">Enter your selling fee in <b>Your costs &amp; assumptions</b> to see EV.</p>';
+      document.getElementById('topnote').textContent = '';
+      return;
+    }
     const noData = rows.filter((x) => x.r.ev == null).length;
     rows = rows.filter((x) => x.r.ev != null && !(f.hideThin && x.r.thin));
     rows.sort((a, b) => f.sort === 'roi' ? b.r.roi - a.r.roi : b.r.ev - a.r.ev);
@@ -228,6 +260,7 @@
   }
 
   function breakdownHTML(r) {
+    if (r.needFee) return '<p class="need-msg">Enter your selling fee in <b>Your costs &amp; assumptions</b> to see EV.</p>';
     if (!r.outcomes) return `<p class="note">Not enough data to calculate. ${r.raw == null ? 'No TCGplayer raw price.' : 'No PSA 10 sales in 90 days.'}</p>`;
     const o = S.opts;
     return `<table class="brk"><thead><tr><th>Outcome</th><th class="num">Chance</th><th class="num">Sells for</th><th class="num">You keep*</th></tr></thead><tbody>

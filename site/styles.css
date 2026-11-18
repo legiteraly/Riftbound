@@ -169,3 +169,7 @@ details.tv th:first-child, details.tv td:first-child { text-align: left; }
 .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .card-img.none { box-shadow: none; }
 @media (max-width: 600px) { .head-left { flex-direction: column; align-items: flex-start; } .card-img { width: 130px; } }
+
+.assume input.need { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent); }
+.assume .hint.need { color: var(--accent); font-weight: 600; }
+.need-msg { background: var(--surface-2); border-radius: 8px; padding: 14px; color: var(--text-secondary); font-size: 14px; margin: 0; }
