@@ -1,46 +1,46 @@
-167~Vi - Destructive~ON~11~50~62
-168~Jinx - Demolitionist~ON~10~68~79
-169~Zed - From the Shadows~ON~7~38~45
-170~Shen - Scourge of Shadows~ON~6~29~35
-171~Riven - Shattered~ON~6~46~53
-172~Draven - Showboat~ON~5~31~36
-173~Swain - Visionary~ON~9~41~51
-174~Irelia - Fervent~ON~10~61~71
-175~Jayce - Man of Progress~ON~9~37~46
-176~Viktor - Innovator~ON~8~39~49
-177~Renekton - Brute~ON~3~45~48
-178~Nasus - Guardian of Knowledge~ON~8~35~43
-179~Rengar - Trophy Hunter~ON~4~43~47
-180~Kha'Zix - Evolving Hunter~ON~10~35~45
-181~Gangplank - Naval~ON~6~60~66
-182~Illaoi - Prophet of the Great Kraken~ON~5~44~50
-183~Diana - No Longer Human~ON~6~72~79
-184~Leona - Determined~ON~1~63~64
-185~Kayle - Justified~ON~12~82~94
-186~Morgana - Vindictive~ON~9~59~69
-187~Ambessa - Respected and Feared~ON~6~28~34
-188~Mel - Defiant Soul~ON~2~32~34
-189~Akali - Rogue Assassin~ON~39~227~268
-189*~Akali - Rogue Assassin~SIG~106~438~559
-190~Renekton - Butcher of the Sands~ON~1~27~28
-190*~Renekton - Butcher of the Sands~SIG~28~163~194
-191~Zed - Master of Shadows~ON~14~99~116
-191*~Zed - Master of Shadows~SIG~54~395~456
-192~Nasus - Curator of the Sands~ON~9~46~55
-192*~Nasus - Curator of the Sands~SIG~30~161~193
-193~Shen - Eye of Twilight~ON~3~35~38
-193*~Shen - Eye of Twilight~SIG~31~169~203
-194~Jayce - Defender of Tomorrow~ON~24~48~73
-194*~Jayce - Defender of Tomorrow~SIG~50~265~316
-195~Mel - Soul's Reflection~ON~7~73~80
-195*~Mel - Soul's Reflection~SIG~46~240~289
-196~Ambessa - Matriarch of War~ON~2~41~43
-196*~Ambessa - Matriarch of War~SIG~31~150~182
-197~Kennen - Heart of the Tempest~ON~7~101~108
-197*~Kennen - Heart of the Tempest~SIG~53~245~302
-SP1~Kai'Sa - Survivor~SP~36~409~454
-SP2~Sona - Harmonious~SP~18~247~267
-SP3~Ahri - Inquisitive~SP~50~932~987
-SP4~Sett - Brawler~SP~18~154~172
-SP5~Ezreal - Prodigy~SP~14~162~178
-SP6~Lux - Crownguard~SP~23~381~405
+167~Vi - Destructive~ON~13~53~67
+168~Jinx - Demolitionist~ON~12~75~88
+169~Zed - From the Shadows~ON~7~41~48
+170~Shen - Scourge of Shadows~ON~9~33~42
+171~Riven - Shattered~ON~7~51~59
+172~Draven - Showboat~ON~7~37~44
+173~Swain - Visionary~ON~10~43~54
+174~Irelia - Fervent~ON~13~64~77
+175~Jayce - Man of Progress~ON~9~40~49
+176~Viktor - Innovator~ON~8~44~54
+177~Renekton - Brute~ON~4~48~52
+178~Nasus - Guardian of Knowledge~ON~9~37~46
+179~Rengar - Trophy Hunter~ON~4~45~49
+180~Kha'Zix - Evolving Hunter~ON~10~36~46
+181~Gangplank - Naval~ON~6~65~71
+182~Illaoi - Prophet of the Great Kraken~ON~5~47~53
+183~Diana - No Longer Human~ON~6~77~84
+184~Leona - Determined~ON~2~67~70
+185~Kayle - Justified~ON~12~86~98
+186~Morgana - Vindictive~ON~11~63~75
+187~Ambessa - Respected and Feared~ON~6~29~35
+188~Mel - Defiant Soul~ON~3~39~42
+189~Akali - Rogue Assassin~ON~40~236~278
+189*~Akali - Rogue Assassin~SIG~108~452~575
+190~Renekton - Butcher of the Sands~ON~1~27~29
+190*~Renekton - Butcher of the Sands~SIG~29~168~200
+191~Zed - Master of Shadows~ON~14~102~119
+191*~Zed - Master of Shadows~SIG~54~403~464
+192~Nasus - Curator of the Sands~ON~9~50~59
+192*~Nasus - Curator of the Sands~SIG~30~167~199
+193~Shen - Eye of Twilight~ON~4~36~40
+193*~Shen - Eye of Twilight~SIG~31~173~207
+194~Jayce - Defender of Tomorrow~ON~27~53~82
+194*~Jayce - Defender of Tomorrow~SIG~53~274~328
+195~Mel - Soul's Reflection~ON~8~76~84
+195*~Mel - Soul's Reflection~SIG~47~250~300
+196~Ambessa - Matriarch of War~ON~2~44~46
+196*~Ambessa - Matriarch of War~SIG~32~157~190
+197~Kennen - Heart of the Tempest~ON~8~108~116
+197*~Kennen - Heart of the Tempest~SIG~58~251~313
+SP1~Kai'Sa - Survivor~SP~38~436~484
+SP2~Sona - Harmonious~SP~21~263~286
+SP3~Ahri - Inquisitive~SP~55~979~1039
+SP4~Sett - Brawler~SP~22~172~194
+SP5~Ezreal - Prodigy~SP~18~173~193
+SP6~Lux - Crownguard~SP~28~403~432

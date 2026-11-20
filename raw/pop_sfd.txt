@@ -1,66 +1,42 @@
-020a~Draven - Vanquisher~AA~2~32~35
-026a~Rumble - Hotheaded~AA~0~13~13
-028a~Lucian - Gunslinger~AA~8~69~77
-029a~Rek'Sai - Breacher~AA~1~23~24
-050a~Azir - Ascendant~AA~1~15~16
-054a~Jax - Unmatched~AA~3~16~19
-057a~Irelia - Fervent~AA~7~117~125
-058a~Ornn - Blacksmith~AA~3~34~37
-082a~Ezreal - Dashing~AA~10~54~66
-085a~Ornn - Forge God~AA~1~10~11
-088a~Renata Glasc - Mastermind~AA~3~29~33
-089a~Rumble - Scrapper~AA~2~49~51
-110a~Fiora - Peerless~AA~5~36~41
-113a~Lucian - Merciless~AA~3~33~36
-119a~Jax - Unrelenting~AA~2~36~38
-120a~Sivir - Ambitious~AA~4~34~38
-141a~Irelia - Graceful~AA~12~77~92
-143a~Sivir - Mercenary~AA~1~12~13
-148a~Draven - Audacious~AA~8~58~68
-149a~Ezreal - Prodigy~AA~10~129~139
-170a~Rek'Sai - Swarm Queen~AA~1~10~11
-171a~Renata Glasc - Industrialist~AA~2~16~19
-177a~Azir - Sovereign~AA~3~41~44
-180a~Fiora - Worthy~AA~6~70~77
-222~Seal of Rage~ON~5~30~35
-223~Vayne - Hunter~ON~76~604~696
-223*~Vayne - Hunter~SIG~57~581~644
-224~Aphelios - Exalted~ON~41~307~350
-224*~Aphelios - Exalted~SIG~70~417~495
-225~Irelia - Fervent~ON~75~560~642
-225*~Irelia - Fervent~SIG~73~527~611
-226~Seal of Focus~ON~1~20~22
-227~Ahri - Inquisitive~ON~122~1275~1410
-227*~Ahri - Inquisitive~SIG~45~652~712
-228~Bard - Mercurial~ON~9~242~255
-228*~Bard - Mercurial~SIG~31~387~425
-229~Seal of Insight~ON~3~34~37
-230~Teemo - Strategist~ON~49~504~560
-230*~Teemo - Strategist~SIG~39~480~529
-231~Seal of Strength~ON~6~26~33
-232~Sett - Brawler~ON~19~254~276
-232*~Sett - Brawler~SIG~54~343~405
-233~Yone - Blademaster~ON~24~338~365
-233*~Yone - Blademaster~SIG~42~420~473
-234~Seal of Discord~ON~3~36~40
-235~Yasuo - Windrider~ON~30~255~286
-235*~Yasuo - Windrider~SIG~66~393~470
-236~Darius - Executioner~ON~33~217~252
-236*~Darius - Executioner~SIG~55~318~390
-237~Karma - Channeler~ON~24~256~283
-237*~Karma - Channeler~SIG~25~357~386
-238~Seal of Unity~ON~1~22~23
-239~Soraka - Wanderer~ON~38~441~486
-239*~Soraka - Wanderer~SIG~51~474~530
-240~Rumble - Mechanized Menace~ON~27~126~156
-241~Lucian - Purifier~ON~18~150~170
-242~Draven - Glorious Executioner~ON~27~207~237
-243~Rek'Sai - Void Burrower~ON~9~147~157
-244~Ornn - Fire Below the Mountain~ON~18~141~160
-245~Jax - Grandmaster at Arms~ON~21~151~173
-246~Irelia - Blade Dancer~ON~40~307~353
-247~Azir - Emperor of the Sands~ON~16~178~195
-248~Ezreal - Prodigal Explorer~ON~23~237~261
-249~Renata Glasc - Chem-Baroness~ON~18~132~152
-250~Sivir - Battle Mistress~ON~21~141~163
-251~Fiora - Grand Duelist~ON~22~216~242
+222~Seal of Rage~ON~5~32~37
+223~Vayne - Hunter~ON~83~623~722
+223*~Vayne - Hunter~SIG~59~585~650
+224~Aphelios - Exalted~ON~44~317~363
+224*~Aphelios - Exalted~SIG~70~424~502
+225~Irelia - Fervent~ON~76~579~662
+225*~Irelia - Fervent~SIG~73~533~617
+226~Seal of Focus~ON~1~21~23
+227~Ahri - Inquisitive~ON~123~1310~1446
+227*~Ahri - Inquisitive~SIG~47~664~726
+228~Bard - Mercurial~ON~11~244~259
+228*~Bard - Mercurial~SIG~31~394~433
+229~Seal of Insight~ON~3~35~38
+230~Teemo - Strategist~ON~50~530~588
+230*~Teemo - Strategist~SIG~40~484~535
+231~Seal of Strength~ON~6~28~35
+232~Sett - Brawler~ON~20~267~290
+232*~Sett - Brawler~SIG~54~351~414
+233~Yone - Blademaster~ON~27~350~380
+233*~Yone - Blademaster~SIG~43~429~483
+234~Seal of Discord~ON~3~40~44
+235~Yasuo - Windrider~ON~31~266~298
+235*~Yasuo - Windrider~SIG~68~402~481
+236~Darius - Executioner~ON~33~220~255
+236*~Darius - Executioner~SIG~56~322~395
+237~Karma - Channeler~ON~25~260~288
+237*~Karma - Channeler~SIG~25~361~391
+238~Seal of Unity~ON~1~24~25
+239~Soraka - Wanderer~ON~39~458~504
+239*~Soraka - Wanderer~SIG~52~480~537
+240~Rumble - Mechanized Menace~ON~27~130~160
+241~Lucian - Purifier~ON~18~160~180
+242~Draven - Glorious Executioner~ON~28~208~239
+243~Rek'Sai - Void Burrower~ON~9~149~159
+244~Ornn - Fire Below the Mountain~ON~19~144~164
+245~Jax - Grandmaster at Arms~ON~21~154~176
+246~Irelia - Blade Dancer~ON~44~315~365
+247~Azir - Emperor of the Sands~ON~16~182~199
+248~Ezreal - Prodigal Explorer~ON~23~247~271
+249~Renata Glasc - Chem-Baroness~ON~20~135~157
+250~Sivir - Battle Mistress~ON~22~144~167
+251~Fiora - Grand Duelist~ON~22~224~250
